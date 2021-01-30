@@ -23,6 +23,7 @@ var a3=[];
 var j=0;
 var value=[];
 var m=0;
+var answer=[];
 class paper extends Component{
     constructor(props){
         super(props);
@@ -62,16 +63,16 @@ class paper extends Component{
          console.log(m);
          return m;
     }
-    options(){
+    options(i){
         
-       j=j+1;
+       
         
               
                return <div className="select">    
-                <label style={{padding:10,marginRight:10,marginTop:100 }}>{j}</label> 
+                <label style={{padding:10,marginRight:10,marginTop:100 }}>{i}</label> 
               {elements.map((value, index) => {
            
-              return [<input type="radio" value={value} name={j} style={{padding:10,marginLeft:100,marginTop:100 }}></input>,
+              return [<input type="radio" value={value} name={i} style={{padding:10,marginLeft:100,marginTop:100 }} onChange={evt=>this.check(evt)}></input>,
                     <label style={{padding:10,marginLeft:30,marginTop:100 }}>{value} </label>]
                 
 
@@ -85,11 +86,15 @@ class paper extends Component{
         
     }
     check=(evt)=>{
-        this.setState({
-            selected:evt.target.value,
-            selectedname:evt.target.name
-        })
-        axios({url:"/api/answers",method:"POST",headers:{authorization:"your token"},data:{q_no:this.state.selectedname,answer:this.state.selected}}).then(response => console.log(response))
+        
+        console.log(evt.target.value,evt.target.name);
+        for(var i=0;i<answer.length;i++){
+            if (answer[i].q_no==evt.target.name){
+                answer.splice(i);
+
+            }
+        }
+        answer.push({q_no:evt.target.name,answer:evt.target.value})
     }
    option1(){
   
@@ -97,7 +102,7 @@ class paper extends Component{
    
    
    
-    for (var i=0;i<a3[0];i++)
+    for (var i=1;i<=a3[0];i++)
     a1[i]=this.options();
   return  a1;  
    }
@@ -105,7 +110,7 @@ class paper extends Component{
        this.setState({
           input :evt.target.value
        });
-       axios({url:'http://localhost:5000/api/submit3', method:"POST",headers:{authorization:"your token"},data:{id:evt.target.value}})
+       axios({url:'/api/submit3', method:"POST",headers:{authorization:"your token"},data:{id:evt.target.value}})
        .then(response => console.log(response))
    }
 

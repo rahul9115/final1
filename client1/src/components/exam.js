@@ -12,6 +12,9 @@ import parse from "html-react-parser";
 import axios from "axios";
 var a="";
 var value=false;
+var q_no=[];
+var answers=[];
+var i=0;
 class exam extends Component{
         
     constructor(props){
@@ -29,6 +32,16 @@ class exam extends Component{
         }
         
         
+    }
+    give(evt){
+        for(var i=0;i<answers.length;i++){
+            if (answers[i].q_no==evt.target.name){
+                answers.splice(i);
+
+            }
+        }
+        answers.push({q_no:evt.target.name,answer:evt.target.value});
+        console.log(answers);
     }
     call3(){
         axios.get("/api/output").then(res=>{
@@ -49,13 +62,43 @@ class exam extends Component{
             
         
     }
+    optionscall(i){
+        console.log(q_no[0])
+        return <div className="select">    
+        <label style={{padding:10,marginRight:10,marginTop:100 }}>{i}</label> 
+        
+      <select id="cars" name={i} onChange={evt=>this.give(evt)}>
+      <option value=" " ></option>      
+    <option value="A" >A</option>
+    <option value="B">B</option>
+    <option value="C">C</option>
+    <option value="D">D</option>
+  </select>
+      
+        
+
+        
+      
+      </div>
+    }
+    option1(){
+  
+    
+   
+   
+   
+        for (i=1;i<=this.state.input1;i++)
+        a1[i]=this.optionscall(i);
+       console.log(q_no[0],a1); 
+      return  a1;  
+       }
     show2=()=>{
         this.setState({element:<div className="modal-content"><a class="close1" href="#" onClick={this.delete2}>&times;</a> <br></br>
         
-        <h1>Enter the choices</h1>
+        <h1>Enter the answers</h1>
 
         
-            
+            {this.option1()}
             <button onClick={this.pdf} className="ok">Ok</button>
 
             </div>,style:{display:'block'}})
@@ -117,7 +160,7 @@ class exam extends Component{
         .catch(() => console.log('Error creating new course'));
         console.log("Questions",this.state.input1);
         axios.post("/api/submit2",{questions:this.state.input1}).then(response=>console.log(response)).catch(()=>console.log('Error creating questions'))
-
+        axios.post("/api/submit5",answers).then(response=>console.log(response)).catch(()=>console.log('Error creating questions'))
     }   
     questions=(evt)=>{
         
