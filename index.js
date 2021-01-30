@@ -32,7 +32,7 @@ app.use(
 );
 if (process.env.NODE_ENV == 'production') {
   
-    app.use(express.static('client1/build'));
+    
         app.get("/api/submit4",(req,res)=>{
             res.send("");
         })
