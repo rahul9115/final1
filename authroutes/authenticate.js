@@ -54,8 +54,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
     
         });
         res.redirect("/login");
-       }
-       if (a=="student"){
+       }else{
         app.get('/api/output1', (req, res) => {
            
             app.get('/api/output', (req, res) => {
@@ -73,15 +72,20 @@ app.use(bodyParser.urlencoded({ extended: true }));
     
         });
        res.redirect("/paper");
-       }else{
-           
-           res.send("");
        }
         
     }
         
     );
+    app.get('/api/output', (req, res) => {
+        console.log("wolabbi")
+        
+        info=req.user;
+        
+        res.send(req.user);
+        
     
+    });   
     app.get("/api/logout", (req, res) => {
         req.logout();
         app.get('/api/output', (req, res) => {
