@@ -190,7 +190,7 @@ app.post("/api/submit3",(req,res)=>{
     File.findOne({pdf_id:googleId},(err,user)=>{
         if(user!=null){
         
-            console.log(existingUser);
+            
            
                 console.log("in")
                 
