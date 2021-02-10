@@ -216,7 +216,7 @@ app.get("/api/submit3",(req,res)=>{
                 console.log("in")
                 new student({_id:info.googleId,email:info.email[0].value,pdf_id:googleId}).save();
                 const params={
-                    Bucket:"exam-rahul-vemuri-12",
+                    Bucket:"examanandvemuri1",
                     Key:user.pdf_id
                                   
             }   
