@@ -6,7 +6,7 @@ var FileManager = require('file-storage');
 require('../models/file')
 require('../models/student')
 require('../models/answer')
-var object1={};
+var object=0;
 const mongoose=require('mongoose');
 const { Binary } = require('mongodb');
 const File=mongoose.model('files');
@@ -25,8 +25,8 @@ const mongouri="mongodb+srv://rahul:rahul@cluster0.rpfjy.mongodb.net/<dbname>?re
 const conn =mongoose.createConnection(mongouri);
 var id="";
 const s3=new AWS.S3({
-    accessKeyId:process.env.AWS_ID,
-    secretAccessKey:process.env.AWS_SECRET
+    accessKeyId:"AKIAIRGTC6YLJ4BMMCSQ",
+    secretAccessKey:"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",
 })
 
 const storage=multer.memoryStorage({
@@ -45,18 +45,18 @@ app.use(bodyParser.urlencoded({ extended: true }));
     app.get('/auth/google', passport.authenticate('google', {
         scope: ['email', 'profile']
     }));
-   
+    app.post("/api/state",(req,res)=>{
+        console.log("This",req.body.profile);
+        a=req.body.profile;
+    })
     app.get('/auth/google/callback', passport.authenticate('google'),(req,res)=>{
-        app.post("/api/state",(req,res)=>{
-            console.log("This",req.body.profile);
-            a=req.body.profile;
-        })
+        
        if (a=="teacher"){
        
        
         res.redirect("/login");
     }
-       if (a=="student"){
+       else{
         app.get('/api/output1', (req, res) => {
             console.log("wolabbi")
             
@@ -70,6 +70,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
     }
 
  });
+ 
  app.get('/api/output', (req, res) => {
     console.log("wolabbi")
     
@@ -79,7 +80,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
     
 
 });   
- 
  
     app.get("/api/logout", (req, res) => {
         req.logout();
@@ -188,11 +188,7 @@ app.post("/api/submit3",(req,res)=>{
     if(info.googleId!=undefined){
     File.findOne({pdf_id:googleId},(err,user)=>{
         if(user!=null){
-        student.findOne({pdf_id:googleId,_id:info.googleId}).then((existingUser)=>{
-            console.log(existingUser);
-           
-                console.log("in")
-                new student({_id:info.googleId,email:info.email[0].value,pdf_id:googleId}).save();
+        
                 const params={
                     Bucket:"examanandvemuri1",
                     Key:user.pdf_id
@@ -208,12 +204,13 @@ app.post("/api/submit3",(req,res)=>{
                     else
                         url=url+data[i];    
                 }
-                object1={user1:user.name,q:user.questions,url1:url};
+                object={user1:user.name,q:user.questions,url1:url}
+                
          })
         teacher_answers1=user.answers; 
         console.log("teacher",teacher_answers1)
            
-        })
+        
         
         
        
@@ -226,18 +223,17 @@ app.post("/api/submit3",(req,res)=>{
     })
 }
 })
-
-
-
 app.get("/api/submit3",(req,res)=>{
-    res.send(object1);
+    res.send(object);
 })
+var score=0;
+
+ 
     
 
         
     
     app.get("/api/score",(req,res)=>{
-        var score=0;
         console.log("teacher",teacher_answers1,student_answers);
         for(var i=0;i<teacher_answers1.length;i++){
             for(var j=0;j<student_answers.length;j++){
@@ -250,11 +246,9 @@ app.get("/api/submit3",(req,res)=>{
         }
         answer.findOne({_id:info.googleId,pdf_id:googleId}).then((user)=>{
             if(user){
-                res.send("Sorry you have already given the test");
+                alert("You have already submitted")
             }else{
-                new answer({_id:info.googleId,email:info.email[0].value,pdf_id:googleId,student_score:score,answers:student_answers}).save().then(()=>{
-                    res.send("Thank you for giving the test");
-                });
+                new answer({_id:info.googleId,email:info.email[0].value,pdf_id:googleId,student_score:score}).save();
             }
         })
       
