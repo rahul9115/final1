@@ -190,19 +190,19 @@ app.post("/api/answers",(req,res)=>{
     console.log(req.body);
 })  
 app.post("/api/submit3",(req,res)=>{
-    google=req.body.id;
+    googleId=req.body.id;
     console.log("This id",googleId);
     console.log(googleId)
     var name1="";
     var object1={};
-    if(info.google!=undefined){
-    File.findOne({pdf_id:google},(err,user)=>{
+    if(info.googleId!=undefined){
+    File.findOne({pdf_id:googleId},(err,user)=>{
         if(user!=null){
-        student.findOne({pdf_id:google,_id:info.googleId}).then((existingUser)=>{
+        student.findOne({pdf_id:googleId,_id:info.googleId}).then((existingUser)=>{
             console.log(existingUser);
            
                 console.log("in")
-                new student({_id:info.googleId,email:info.email[0].value,pdf_id:google}).save();
+                new student({_id:info.googleId,email:info.email[0].value,pdf_id:googleId}).save();
                 const params={
                     Bucket:"examanandvemuri1",
                     Key:user.pdf_id
