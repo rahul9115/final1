@@ -8,7 +8,7 @@ const mongoose=require('mongoose');
 const { Binary } = require('mongodb');
 const File=mongoose.model('files');
 const cors = require('cors');
-const student=mongoose.model('student');
+
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 var customId=require("custom-id");
@@ -203,7 +203,7 @@ app.post("/api/submit3",(req,res)=>{
             console.log(existingUser);
            
                 console.log("in")
-                new student({_id:info.googleId,email:info.email[0].value,pdf_id:googleId}).save();
+                
                 const params={
                     Bucket:"examanandvemuri1",
                     Key:user.pdf_id
