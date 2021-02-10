@@ -189,20 +189,25 @@ app.post("/api/submit4",(req,res)=>{
 app.post("/api/answers",(req,res)=>{
     console.log(req.body);
 })  
-app.get("/api/submit3",(req,res)=>{
-    console.log("required name",googleId)
+app.post("/api/submit3",(req,res)=>{
+    googleId=req.body.id;
+    console.log("This id",googleId);
+    console.log(googleId)
     var name1="";
     if(info.googleId!=undefined){
-    File.findOne({_id:googleId},(err,user)=>{
+    File.findOne({pdf_id:googleId},(err,user)=>{
         if(user!=null){
-        name1=user.name;
-        const params={
-            Bucket:"examanandvemuri1",
-            Key:user.pdf_id
-                          
-    }
-       
-        s3.getSignedUrl('putObject',params,(err,data)=>{
+        student.findOne({pdf_id:googleId,_id:info.googleId}).then((existingUser)=>{
+            console.log(existingUser);
+           
+                console.log("in")
+                new student({_id:info.googleId,email:info.email[0].value,pdf_id:googleId}).save();
+                const params={
+                    Bucket:"examanandvemuri1",
+                    Key:user.pdf_id
+                                  
+            }   
+            s3.getSignedUrl('putObject',params,(err,data)=>{
             
                 console.log("krishna",data);
                 var url="";
@@ -212,18 +217,26 @@ app.get("/api/submit3",(req,res)=>{
                     else
                         url=url+data[i];    
                 }
-                res.send({user1:user.name,q:user.questions,url1:url});
+                object1={user1:user.name,q:user.questions,url1:url};
          })
+        teacher_answers1=user.answers; 
+        console.log("teacher",teacher_answers1)
+           
+        })
+        
+        
+       
+        
         
         }else{
             res.send("no data");
         }
+       
     })
 }
 })
-
 app.get("/api/submit3",(req,res)=>{
-    res.send(object);
+    res.send(object1);
 })
 var score=0;
 
