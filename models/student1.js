@@ -9,4 +9,4 @@ const dataSchema1=new mongoose.Schema({
 
 
 });
-module.exports=mongoose.model('student',dataSchema1);
+module.exports=mongoose.model('student1',dataSchema1);

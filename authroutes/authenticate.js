@@ -8,11 +8,11 @@ const mongoose=require('mongoose');
 const { Binary } = require('mongodb');
 const File=mongoose.model('files');
 require('../models/file')
-require('../models/student')
+require('../models/student1')
 require('../models/answer')
 var object1={};
 const answer=mongoose.model('answers');
-const student=mongoose.model('student');
+const student=mongoose.model('student1');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
