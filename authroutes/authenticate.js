@@ -155,7 +155,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
         console.log("file",file);
         upload.single(file);
         const params={
-                Bucket:"exam-rahul-vemuri-12",
+                Bucket:"examanandvemuri",
                 Key:id,
                 Body: file.data,
                 name:file.name,
