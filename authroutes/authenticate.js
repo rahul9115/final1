@@ -7,9 +7,7 @@ var FileManager = require('file-storage');
 const mongoose=require('mongoose');
 const { Binary } = require('mongodb');
 const File=mongoose.model('files');
-require('../models/file')
-require('../models/student1')
-require('../models/answer')
+
 var object1={};
 const answer=mongoose.model('answers');
 
