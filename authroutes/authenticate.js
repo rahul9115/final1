@@ -2,31 +2,24 @@ const passport = require('passport');
 var a="";
 const fileupload=require('express-fileupload');
 const fs=require('fs');
-var FileManager = require('file-storage');
+
 require('../models/file')
-require('../models/student')
-require('../models/answer')
-var object=0;
 const mongoose=require('mongoose');
 const { Binary } = require('mongodb');
 const File=mongoose.model('files');
-const student=mongoose.model('student');
-const answer=mongoose.model('answers');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 var customId=require("custom-id");
-var axios=require("axios");
 const AWS=require('aws-sdk');
-const crypto=require("crypto");
 const multer=require("multer");
-const { CostExplorer } = require('aws-sdk');
+var axios=require("axios");
 const mongouri="mongodb+srv://rahul:rahul@cluster0.rpfjy.mongodb.net/<dbname>?retryWrites=true&w=majority";
 const conn =mongoose.createConnection(mongouri);
 var id="";
 const s3=new AWS.S3({
-    accessKeyId:"AKIAIRGTC6YLJ4BMMCSQ",
-    secretAccessKey:"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",
+    accessKeyId:process.env.AWS_ID,
+    secretAccessKey:process.env.AWS_SECRET
 })
 
 const storage=multer.memoryStorage({
@@ -37,7 +30,6 @@ const storage=multer.memoryStorage({
   const upload = multer({ storage });
 module.exports = (app) => {
    app.use(fileupload());
-   app.set("view engine","ejs");
    app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true }));
    app.use(cors());
@@ -50,48 +42,69 @@ app.use(bodyParser.urlencoded({ extended: true }));
         a=req.body.profile;
     })
     app.get('/auth/google/callback', passport.authenticate('google'),(req,res)=>{
-        
        if (a=="teacher"){
-       
-       
-        res.redirect("/login");
-    }
-       else{
-        app.get('/api/output1', (req, res) => {
-            console.log("wolabbi")
+        app.get('/api/output', (req, res) => {
             
+        
             info=req.user;
             
             res.send(req.user);
             
+    
+        });
+        res.redirect("/login");
+       }
+       if (a=="student"){
+        app.get('/api/output1', (req, res) => {
+           
+            app.get('/api/output', (req, res) => {
+    
+               
+                
+                res.send("");
+                
         
-        });  
-    res.redirect("/paper");
+            });   
+            info=req.user;
+            
+            res.send(req.user);
+            
+    
+        });
+       res.redirect("/paper");
+       }else{
+           
+           res.send("");
+       }
+        
     }
-
- });
- 
- app.get('/api/output', (req, res) => {
-    console.log("wolabbi")
+        
+    );
     
-    info=req.user;
-    
-    res.send(req.user);
-    
-
-});   
- 
     app.get("/api/logout", (req, res) => {
         req.logout();
-        app.get("/api/output",(req,res)=>{
+        app.get('/api/output', (req, res) => {
+
+        
+                
+                
             res.send("");
-        })
+            
+    
+        });
+        app.get('/api/output1', (req, res) => {
+
+        
+                
+                
+            res.send("");
+            
+    
+        });
         res.redirect("/");
     });
     var info="";
     
-   
-       
     app.post('/api/stack',(req,res)=>{
         var answers=req.body;
         
@@ -120,27 +133,16 @@ app.use(bodyParser.urlencoded({ extended: true }));
         questions);
         
     })
-    var teacher_answers=[];
-    var student_answers=[];
-    app.post("/api/submit5",(req,res)=>{
-        console.log(req.body)
-        teacher_answers=req.body;
-    });
-    app.post("/api/answers",(req,res)=>{
-        console.log(req.body)
-        student_answers=req.body
-    })  
-    
     app.post('/api/submit',(req,res)=>{
         
         
         console.log("wola",req.files.file);
-                  
         const file=req.files.file;
-        id=customId(file);
+        var id=customId(file);
+        console.log("file",file);
         upload.single(file);
         const params={
-                Bucket:"examanandvemuri1",
+                Bucket:"exam-rahul-vemuri-12",
                 Key:id,
                 Body: file.data,
                 name:file.name,
@@ -148,11 +150,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
         }
         s3.upload(params,(error,data)=>{
                 if(error){
-                    console.log(error)
+                    res.status(500).send(error);
                 }
                 res.status(200).send(data);
         })
-        console.log("file",file);
         File.findOne({_id:info.googleId}).then((existingUser)=>{
             if(existingUser){
                 console.log("in to delete");
@@ -163,38 +164,45 @@ app.use(bodyParser.urlencoded({ extended: true }));
             }
             if(info.googleId){
                 console.log("wolab",{googleId:info.googleId,email:info.email[0].value,name:file.name,files:file});
-                new File({_id:info.googleId,email:info.email[0].value,name:file.name,files:file,questions:q.questions,pdf_id:id,answers:teacher_answers}).save();
+                new File({_id:info.googleId,email:info.email[0].value,name:file.name,files:file,questions:q.questions,pdf_id:id}).save();
             }
             
           
         })
-       
-          
+         
+          file.mv(`/client1/build/media/${file.name}`,err=>{
+            if(err){
+                console.log(err);
+                return res.status(500).send(err);
+            }
+        });
       
       
         
 
 })
 var googleId="";
-
-
-
-var teacher_answers1=[];
-app.post("/api/submit3",(req,res)=>{
+app.post("/api/submit4",(req,res)=>{
     googleId=req.body.id;
     console.log("This id",googleId);
-    console.log(googleId)
+})
+app.post("/api/answers",(req,res)=>{
+    console.log(req.body);
+})  
+app.get("/api/submit3",(req,res)=>{
+    console.log("required name",googleId)
     var name1="";
     if(info.googleId!=undefined){
-    File.findOne({pdf_id:googleId},(err,user)=>{
+    File.findOne({_id:googleId},(err,user)=>{
         if(user!=null){
-        
-                const params={
-                    Bucket:"examanandvemuri1",
-                    Key:user.pdf_id
-                                  
-            }   
-            s3.getSignedUrl('putObject',params,(err,data)=>{
+        name1=user.name;
+        const params={
+            Bucket:"exam-rahul-vemuri-12",
+            Key:user.pdf_id
+                          
+    }
+       
+        s3.getSignedUrl('putObject',params,(err,data)=>{
             
                 console.log("krishna",data);
                 var url="";
@@ -204,25 +212,16 @@ app.post("/api/submit3",(req,res)=>{
                     else
                         url=url+data[i];    
                 }
-                object={user1:user.name,q:user.questions,url1:url}
-                
+                res.send({user1:user.name,q:user.questions,url1:url});
          })
-        teacher_answers1=user.answers; 
-        console.log("teacher",teacher_answers1)
-           
-        
-        
-        
-       
-        
         
         }else{
             res.send("no data");
         }
-       
     })
 }
 })
+
 app.get("/api/submit3",(req,res)=>{
     res.send(object);
 })
@@ -256,7 +255,3 @@ var score=0;
 
 
 }
-    
-
-
-
