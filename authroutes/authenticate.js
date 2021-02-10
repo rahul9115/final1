@@ -30,6 +30,7 @@ const storage=multer.memoryStorage({
         callback(null,'');
     }
 })
+//this inserts aws cr
   const upload = multer({ storage });
 module.exports = (app) => {
    app.use(fileupload());
