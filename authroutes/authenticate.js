@@ -4,6 +4,8 @@ const fileupload=require('express-fileupload');
 const fs=require('fs');
 //hello
 require('../models/file')
+require('../models/student')
+require('../models/answer')
 const mongoose=require('mongoose');
 const { Binary } = require('mongodb');
 const File=mongoose.model('files');
