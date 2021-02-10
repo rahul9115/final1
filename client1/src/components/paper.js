@@ -4,8 +4,6 @@ import {connect} from "react-redux";
 import css from "./css/paper.css";
 import image from "./images/log.png";
 import Body from "./body";
-
-
 import file_name from "./exam";
 import exam from "./exam";
 import * as actions from "../actions";
@@ -15,7 +13,7 @@ import fonts from '../../node_modules/font-awesome/css/font-awesome.min.css';
 const elements=['A','B','C','D'];
 const options=[]
 var a=[];
-var i=3;
+var i=0;
 var a1=[];
 var a2=[];
 var q=" ";
@@ -23,34 +21,42 @@ var a3=[];
 var j=0;
 var value=[];
 var m=0;
+var m1="";
+var d="";
 var answer=[];
 class paper extends Component{
     constructor(props){
         super(props);
         this.state={
             input:null,
-            value
+            value:null,
+            questions:null,
+            url:null
+
         }
     }
-    call(){
+    async call(){
         
-        axios.get("/api/submit3").then(res=>{
-            a.push(res.data.url1);
-            console.log(res.data.url1)
-            a3.push(res.data.q); 
-            
-        });
+        const res = await axios.get("/api/submit3")
+
         
-        return a;
+        m1=res.data;
+        a.push(res.data.url1);
+        a3.push(res.data.q);
+        return m1;
          
-       
+     
+    
+        
+        
     }
    
     async call1(){
         
-        const res=await axios.get("/api/questions");
+        const res=await axios.get("/api/submit3");
+       
         a3.push(res.data.q);
-        console.log(a3)
+        
         return a3;
       
     }
@@ -65,13 +71,12 @@ class paper extends Component{
     }
     options(i){
         
-       
         
               
                return <div className="select">    
                 <label style={{padding:10,marginRight:10,marginTop:100 }}>{i}</label> 
               {elements.map((value, index) => {
-           
+            
               return [<input type="radio" value={value} name={i} style={{padding:10,marginLeft:100,marginTop:100 }} onChange={evt=>this.check(evt)}></input>,
                     <label style={{padding:10,marginLeft:30,marginTop:100 }}>{value} </label>]
                 
@@ -86,7 +91,10 @@ class paper extends Component{
         
     }
     check=(evt)=>{
-        
+        this.setState({
+            selected:evt.target.value,
+            selectedname:evt.target.name
+        })
         console.log(evt.target.value,evt.target.name);
         for(var i=0;i<answer.length;i++){
             if (answer[i].q_no==evt.target.name){
@@ -95,6 +103,7 @@ class paper extends Component{
             }
         }
         answer.push({q_no:evt.target.name,answer:evt.target.value})
+        
     }
    option1(){
   
@@ -103,7 +112,7 @@ class paper extends Component{
    
    
     for (var i=1;i<=a3[0];i++)
-    a1[i]=this.options();
+    a1[i]=this.options(i);
   return  a1;  
    }
    id=(evt)=>{
@@ -113,25 +122,28 @@ class paper extends Component{
        axios({url:'/api/submit3', method:"POST",headers:{authorization:"your token"},data:{id:evt.target.value}})
        .then(response => console.log(response))
    }
-
+   answers=()=>{
+    axios({url:'/api/answers', method:"POST",headers:{authorization:"your token"},data:answer})
+   }
     renderContent() {
-       var str=this.call();
+        this.call()
+   
        var a2=this.call1();
-       console.log(a[0])
+       
        var str4='"'+a[0]+'"';
-       console.log(str);
-       console.log(m)
+       
+       console.log(`"}"`)
        var m1=[]
        this.call3().then(data=>{
         this.state.value=data
     });
-    
+    console.log(this.state.value,a[0],a3[0])
        
-        switch (this.state.value) {
-            case undefined:
-                return <Body />;
+        switch (this.props.auth) {
+            case null:
+                return ;
             case false:
-                return <Body />;
+                return ;
             default:
                 return [
                     <div>
@@ -139,14 +151,15 @@ class paper extends Component{
                
                     <div id="mySidenav" class="sidenav">
                     <input placeholder="Enter the Id" onChange={evt=>this.id(evt)}></input>
-                    <a href="/api/submit3">Begin Exam</a>
+                    <a href="/paper">Begin Exam</a>
                     
-                    <a href="#">Submit Exam</a>
+                    <a href="/api/score" onClick={this.answers}>Submit Exam</a>
                     <a href="/api/logout"><i class="fas fa-sign-out-alt"></i>Logout</a>
                   
                     </div>
                     <div className="pdf1">
-                    <embed src={`/client1/build/media/${str[0]}`} width="1200px" height="600px" />
+                        
+                    <embed src={`${a[0]}`} width="1200px" height="600px" />
                   </div>
                    </div>
                 
