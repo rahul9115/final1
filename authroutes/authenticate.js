@@ -3,14 +3,14 @@ var a="";
 const fileupload=require('express-fileupload');
 const fs=require('fs');
 var FileManager = require('file-storage');
+
+const mongoose=require('mongoose');
+const { Binary } = require('mongodb');
+const File=mongoose.model('files');
 require('../models/file')
 require('../models/student')
 require('../models/answer')
 var object1={};
-const mongoose=require('mongoose');
-const { Binary } = require('mongodb');
-const File=mongoose.model('files');
-
 const answer=mongoose.model('answers');
 const student=mongoose.model('student');
 const cors = require('cors');
