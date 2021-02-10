@@ -232,26 +232,28 @@ var score=0;
 
         
     
-    app.get("/api/score",(req,res)=>{
-        console.log("teacher",teacher_answers1,student_answers);
-        for(var i=0;i<teacher_answers1.length;i++){
-            for(var j=0;j<student_answers.length;j++){
-                if(teacher_answers1[i].q_no==student_answers[j].q_no){
-                    console.log(teacher_answers1[i].q_no,student_answers[i].q_no)
-                    if(teacher_answers1[i].answer==student_answers[j].answer)
-                        score=score+1;
-                }
+app.get("/api/score",(req,res)=>{
+    var score=0;
+    console.log("teacher",teacher_answers1,student_answers);
+    for(var i=0;i<teacher_answers1.length;i++){
+        for(var j=0;j<student_answers.length;j++){
+            if(teacher_answers1[i].q_no==student_answers[j].q_no){
+                console.log(teacher_answers1[i].q_no,student_answers[i].q_no)
+                if(teacher_answers1[i].answer==student_answers[j].answer)
+                    score=score+1;
             }
         }
-        answer.findOne({_id:info.googleId,pdf_id:googleId}).then((user)=>{
-            if(user){
-                alert("You have already submitted")
-            }else{
-                new answer({_id:info.googleId,email:info.email[0].value,pdf_id:googleId,student_score:score}).save();
-            }
-        })
-      
+    }
+    answer.findOne({_id:info.googleId,pdf_id:googleId}).then((user)=>{
+        if(user){
+            res.send("Sorry you have already given the test");
+        }else{
+            new answer({_id:info.googleId,email:info.email[0].value,pdf_id:googleId,student_score:score,answers:student_answers}).save().then(()=>{
+                res.send("Thank you for giving the test");
+            });
+        }
+    })
+  
 })
-
 
 }
