@@ -8,7 +8,7 @@ const mongoose=require('mongoose');
 const { Binary } = require('mongodb');
 const File=mongoose.model('files');
 const cors = require('cors');
-const student=mongoose.model('student');
+
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 var customId=require("custom-id");
@@ -18,7 +18,7 @@ var axios=require("axios");
 const mongouri="mongodb+srv://rahul:rahul@cluster0.rpfjy.mongodb.net/<dbname>?retryWrites=true&w=majority";
 const conn =mongoose.createConnection(mongouri);
 var id="";
-var object1={};
+
 const s3=new AWS.S3({
     accessKeyId:process.env.AWS_ID,
     secretAccessKey:process.env.AWS_SECRET
@@ -208,7 +208,7 @@ app.post("/api/submit3",(req,res)=>{
             console.log(existingUser);
            
                 console.log("in")
-                new student({_id:info.googleId,email:info.email[0].value,pdf_id:googleId}).save();
+                
                 const params={
                     Bucket:"examanandvemuri1",
                     Key:user.pdf_id
