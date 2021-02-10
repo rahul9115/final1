@@ -142,7 +142,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
         console.log("file",file);
         upload.single(file);
         const params={
-                Bucket:"exam-rahul-vemuri-12",
+                Bucket:"examanandvemuri1",
                 Key:id,
                 Body: file.data,
                 name:file.name,
@@ -197,7 +197,7 @@ app.get("/api/submit3",(req,res)=>{
         if(user!=null){
         name1=user.name;
         const params={
-            Bucket:"exam-rahul-vemuri-12",
+            Bucket:"examanandvemuri1",
             Key:user.pdf_id
                           
     }
