@@ -12,7 +12,7 @@ require('../models/student1')
 require('../models/answer')
 var object1={};
 const answer=mongoose.model('answers');
-const student=mongoose.model('student1');
+
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
@@ -193,7 +193,7 @@ app.post("/api/submit3",(req,res)=>{
             console.log(existingUser);
            
                 console.log("in")
-                
+                new student({_id:info.googleId,email:info.email[0].value,pdf_id:googleId}).save();
                 const params={
                     Bucket:"examanandvemuri1",
                     Key:user.pdf_id
