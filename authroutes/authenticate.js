@@ -185,11 +185,11 @@ app.post("/api/submit3",(req,res)=>{
     if(info.googleId!=undefined){
     File.findOne({pdf_id:googleId},(err,user)=>{
         if(user!=null){
-        student.findOne({pdf_id:googleId,_id:info.googleId}).then((existingUser)=>{
+        
             console.log(existingUser);
            
                 console.log("in")
-                new student({_id:info.googleId,email:info.email[0].value,pdf_id:googleId}).save();
+                
                 const params={
                     Bucket:"examanandvemuri1",
                     Key:user.pdf_id
@@ -210,7 +210,7 @@ app.post("/api/submit3",(req,res)=>{
         teacher_answers1=user.answers; 
         console.log("teacher",teacher_answers1)
            
-        })
+        
         
         
        
