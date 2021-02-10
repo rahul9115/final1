@@ -169,13 +169,17 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 })
 var googleId="";
+var teacher_answers=[];
+var student_answers=[];
 app.post("/api/submit4",(req,res)=>{
     googleId=req.body.id;
     console.log("This id",googleId);
 })
 app.post("/api/answers",(req,res)=>{
     console.log(req.body);
+    student_answers=req.body
 })  
+
 app.post("/api/submit3",(req,res)=>{
     googleId=req.body.id;
     console.log("This id",googleId);
