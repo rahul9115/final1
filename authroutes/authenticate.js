@@ -4,6 +4,8 @@ const fileupload=require('express-fileupload');
 const fs=require('fs');
 //hello
 require('../models/file')
+require('../models/student1')
+require('../models/answer')
 const mongoose=require('mongoose');
 const { Binary } = require('mongodb');
 const File=mongoose.model('files');
@@ -87,28 +89,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
         
     
     });   
-    app.get("/api/logout", (req, res) => {
-        req.logout();
-        app.get('/api/output', (req, res) => {
-
-        
-                
-                
-            res.send("");
-            
     
-        });
-        app.get('/api/output1', (req, res) => {
-
-        
-                
-                
-            res.send("");
-            
-    
-        });
-        res.redirect("/");
-    });
     var info="";
     
     app.post('/api/stack',(req,res)=>{
