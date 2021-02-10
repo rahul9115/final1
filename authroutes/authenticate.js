@@ -18,6 +18,7 @@ var axios=require("axios");
 const mongouri="mongodb+srv://rahul:rahul@cluster0.rpfjy.mongodb.net/<dbname>?retryWrites=true&w=majority";
 const conn =mongoose.createConnection(mongouri);
 var id="";
+var object1={};
 const s3=new AWS.S3({
     accessKeyId:process.env.AWS_ID,
     secretAccessKey:process.env.AWS_SECRET
@@ -199,7 +200,7 @@ app.post("/api/submit3",(req,res)=>{
     console.log("This id",googleId);
     console.log(googleId)
     var name1="";
-    var object1={};
+    
     if(info.googleId!=undefined){
     File.findOne({pdf_id:googleId},(err,user)=>{
         if(user!=null){
